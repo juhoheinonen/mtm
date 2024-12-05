@@ -45,9 +45,6 @@ int main(void)
 	const int tile_width = screenWidth / game_grid_width_in_tiles;
 	const int tile_height = screenHeight / game_grid_height_in_tiles;
 
-	int player_x = 1;
-	int player_y = 1;
-
 	// Declare a fixed-size 2D array
 	game_tile game_grid[game_grid_width_in_tiles][game_grid_height_in_tiles];
 

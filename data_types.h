@@ -30,6 +30,16 @@ typedef struct
         LEFT,
         RIGHT
     } direction;
-} player;
+    // The player's body is a linked list of body parts.
+    struct player_body *next;
+} player_head;
+
+typedef struct
+{
+    int x;
+    int y;
+    // The player's body is a linked list of body parts.
+    struct player_body *next;    
+} player_body;
 
 #endif
