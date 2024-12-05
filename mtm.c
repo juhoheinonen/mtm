@@ -2,6 +2,7 @@
 #include "data_types.h"
 #include <stdlib.h>
 #include <time.h>
+#include "mtm.h"
 
 // Global variables
 int score = 0;
@@ -45,6 +46,23 @@ void initialize_game_grid(game_tile game_grid[][48], int width, int height)
 		game_grid[0][y].type = WALL;
 		game_grid[width - 1][y].type = WALL;
 	}
+}
+
+void player_head_add_body(int previous_x, int previous_y, player_head *player)
+{
+	player_body *new_body = (player_body *)malloc(sizeof(player_body));
+	new_body->x = previous_x;
+	new_body->y = previous_y;
+	new_body->next = NULL;
+	player->next = new_body;
+}
+void player_body_add_body(int x, int y, player_body *current)
+{
+	player_body *new_body = (player_body *)malloc(sizeof(player_body));
+	new_body->x = x;
+	new_body->y = y;
+	new_body->next = NULL;
+	current->next = new_body;
 }
 
 void get_worm_length(player_head *player)
@@ -100,52 +118,33 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 		{
 			if (player->next == NULL)
 			{
-				player_body *new_body = (player_body *)malloc(sizeof(player_body));
-				new_body->x = previous_x;
-				new_body->y = previous_y;
-				new_body->next = NULL;
-				player->next = new_body;				
+				player_head_add_body(previous_x, previous_y, player);
 			}
 			else
 			{
 				player_body *current = player->next;
-				if (current != NULL)
-				{
-					current->x = previous_x;
-					current->y = previous_y;					
-				}
+				// if (current != NULL)
+				// {
+				// 	current->x = previous_x;
+				// 	current->y = previous_y;
+				// }
 				while (current->next != NULL)
 				{
 					current = current->next;
 				}
 
-				player_body *new_body = (player_body *)malloc(sizeof(player_body));
-				new_body->x = current->x;
-				new_body->y = current->y;
-				new_body->next = NULL;
-				current->next = new_body;				
+				player_body_add_body(current->x, current->y, current);
+				// player_body *new_body = (player_body *)malloc(sizeof(player_body));
+				// new_body->x = current->x;
+				// new_body->y = current->y;
+				// new_body->next = NULL;
+				// current->next = new_body;
 			}
 		}
 	}
 
 	// set player's new position to grid
 	game_grid[player->x][player->y].type = PLAYER_HEAD;
-
-	// // get last body part of player. Set game_grid for last body to GRASS.
-	// if (player->next != NULL)
-	// {
-	// 	player_body *current = player->next;				
-	// 	// while (current->next != NULL)
-	// 	// {
-	// 	// 	current = current->next;
-	// 	// }
-
-	// 	game_grid[current->x][current->y].type = GRASS;
-	// }
-	// else
-	// {
-	// 	game_grid[previous_x][previous_y].type = GRASS;
-	// }	
 
 	game_grid[previous_x][previous_y].type = GRASS;
 }
