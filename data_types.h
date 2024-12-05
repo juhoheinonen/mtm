@@ -11,11 +11,25 @@ typedef struct
     enum
     {
         EMPTY,
+        GRASS,
         WALL,
         PLAYER_HEAD,
         PLAYER_BODY,
         GOAL
     } type;
 } game_tile;
+
+typedef struct
+{
+    int x;
+    int y;
+    enum 
+    {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    } direction;
+} player;
 
 #endif
