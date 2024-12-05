@@ -55,6 +55,31 @@ int main(void)
 
 		//DrawText("Onneksi olkoon, sait tehtyä ensimmäisen ikkunan!", 190, 200, 20, LIGHTGRAY);
 
+		// Draw the game grid. Currently just use colors to fill the tiles. Empty is light green, wall is brown.
+		for (int x = 0; x < game_grid_width_in_tiles; x++)
+		{
+			for (int y = 0; y < game_grid_height_in_tiles; y++)
+			{
+				switch (game_grid[x][y].type)
+				{
+					case EMPTY:
+						DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, GREEN);
+						break;
+					case WALL:
+						DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BROWN);
+						break;
+					case PLAYER:
+						DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BLUE);
+						break;
+					case GOAL:
+						DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, RED);
+						break;
+				}
+			}
+		}
 		EndDrawing();
+
+		// wait for 500ms
+		Wait(500);		
 	}
 }
