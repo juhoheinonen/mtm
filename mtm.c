@@ -70,11 +70,14 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 		break;
 	}
 
-	// set player's new position to grid
-	game_grid[player->x][player->y].type = PLAYER_HEAD;
-
+	// if hit wall or body, game over
+	if (game_grid[player->x][player->y].type == WALL || game_grid[player->x][player->y].type == PLAYER_BODY)
+	{
+		TraceLog(LOG_INFO, "Game over. Hit wall or body");
+		status = GAME_OVER;
+	}
 	// check if player has reached the goal
-	if (game_grid[player->x][player->y].type == GOAL)
+	else if (game_grid[player->x][player->y].type == GOAL)
 	{
 		score++;
 		if (score == max_score)
@@ -88,11 +91,8 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 		}
 	}
 
-	// if hit wall or body, game over
-	if (game_grid[player->x][player->y].type == WALL || game_grid[player->x][player->y].type == PLAYER_BODY)
-	{
-		status = GAME_OVER;
-	}
+	// set player's new position to grid
+	game_grid[player->x][player->y].type = PLAYER_HEAD;
 
 	// set previous position to GRASS
 	game_grid[previous_x][previous_y].type = GRASS;
@@ -161,7 +161,7 @@ int main(void)
 	// Load the goal texture
 	Texture2D goalTexture = LoadTexture("goal_1.png");
 
-	SetTargetFPS(60);
+	SetTargetFPS(60);	
 
 	double seconds_elapsed = 0.0;
 	const double increment_seconds = 0.1;
