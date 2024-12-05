@@ -42,4 +42,12 @@ typedef struct
     struct player_body *next;    
 } player_body;
 
+// enum for game status, like running, game over and win
+typedef enum
+{
+    RUNNING,
+    GAME_OVER,
+    WIN
+} game_status;
+
 #endif

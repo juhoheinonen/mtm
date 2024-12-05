@@ -1,5 +1,17 @@
 #include "raylib.h"
 #include "data_types.h"
+#include <stdlib.h>
+#include <time.h>
+
+// Global variables
+int score = 0;
+const int max_score = 10;
+game_status status = RUNNING;
+
+int getRandomInt(int min, int max)
+{
+	return (rand() % max) + min;
+}
 
 // Initialize the game grid with empty tiles and walls. Player and goal tiles are not added here.
 void initialize_game_grid(game_tile game_grid[][48], int width, int height)
@@ -58,24 +70,60 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 		break;
 	}
 
-	//TraceLog(LOG_INFO, "Player direction: %d", player->direction);
-
-	// using tracelog write player attributes
-	// TraceLog(LOG_INFO, "Player head x: %d, y: %d", player->x, player->y);
-	// also direction
-	// TraceLog(LOG_INFO, "Player direction: %d", player->direction);
-
-	// // Check if the player has hit a wall or a goal
-	// if (game_grid[player.x][player.y].type == WALL)
-	// {
-
-	// const char *text = TextFormat("Player head x: %d, y: %d", player->x, player->y);
-	// DrawText(text, 190, 5, 20, LIGHTGRAY);
-
 	// set player's new position to grid
 	game_grid[player->x][player->y].type = PLAYER_HEAD;
+
+
+	// check if player has reached the goal
+	if (game_grid[player->x][player->y].type == GOAL)
+	{
+		score++;
+		if (score == max_score)
+		{
+			status = WIN;
+		} else {
+			// Add a new body part to the player
+			player_body *new_body_part = (player_body *)malloc(sizeof(player_body));
+			new_body_part->x = previous_x;
+			new_body_part->y = previous_y;
+			new_body_part->next = player->next;
+			player->next = new_body_part;
+		}
+	}
+
 	// set previous position to GRASS
 	game_grid[previous_x][previous_y].type = GRASS;
+}
+
+void check_goal_and_add_if_missing(game_tile game_grid[][48], int game_grid_width_in_tiles, int game_grid_height_in_tiles)
+{
+	// Check if goal is present
+	bool goal_present = false;
+	for (int x = 0; x < game_grid_width_in_tiles; x++)
+	{
+		for (int y = 0; y < game_grid_height_in_tiles; y++)
+		{
+			if (game_grid[x][y].type == GOAL)
+			{
+				goal_present = true;
+				break;
+			}
+		}
+	}
+
+	// If goal is not present, add it
+	while (!goal_present)
+	{
+		int goal_x = getRandomInt(1, game_grid_width_in_tiles - 1);
+		int goal_y = getRandomInt(3, game_grid_height_in_tiles - 1);
+
+		if (game_grid[goal_x][goal_y].type == GRASS)
+		{
+			goal_present = true;
+		}
+
+		game_grid[goal_x][goal_y].type = GOAL;
+	}
 }
 
 int main(void)
@@ -101,10 +149,14 @@ int main(void)
 	player_head player = {5, 5, RIGHT, NULL};
 	game_grid[player.x][player.y].type = PLAYER_HEAD;
 
+	srand(time(NULL));
+
 	InitWindow(screenWidth, screenHeight, "Miia the Maggot");
 
 	// Load the grass texture
 	Texture2D grassTexture = LoadTexture("grass_1.png");
+	// Load the goal texture
+	Texture2D goalTexture = LoadTexture("goal_1.png");
 
 	SetTargetFPS(60);
 
@@ -113,7 +165,8 @@ int main(void)
 
 	while (!WindowShouldClose())
 	{
-		//TraceLog(LOG_INFO, "Start. Player direction: %d", player.direction);
+		// if goal is not present, add it
+		check_goal_and_add_if_missing(game_grid, game_grid_width_in_tiles, game_grid_height_in_tiles);
 
 		// Listen for direction keys and prevent 180-degree turns
 		if (IsKeyDown(KEY_UP) && player.direction != DOWN)
@@ -139,7 +192,7 @@ int main(void)
 
 		// Update the game state based on the elapsed time
 		seconds_elapsed += GetFrameTime();
-		if (seconds_elapsed > 0.2)
+		if (seconds_elapsed > 0.05)
 		{
 			seconds_elapsed = 0.0;
 			update_grid(game_grid, &player);
@@ -147,6 +200,9 @@ int main(void)
 
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
+
+		// Draw the background texture
+		DrawTexture(grassTexture, 0, 0, WHITE);
 
 		// Draw the game grid. Currently just use colors to fill the tiles. Empty is light green, wall is brown.
 		for (int x = 0; x < game_grid_width_in_tiles; x++)
@@ -171,12 +227,13 @@ int main(void)
 					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BLUE);
 					break;
 				case GOAL:
-					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, RED);
+					// DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, RED);
+					DrawTexture(goalTexture, x * tile_width, y * tile_height, WHITE);
 					break;
 				}
 			}
 		}
-		const char *text = TextFormat("Tile width: %d, Tile height: %d", tile_width, tile_height);
+		const char *text = TextFormat("Score %d/%d", score, max_score);
 		DrawText(text, 190, 5, 20, LIGHTGRAY);
 		EndDrawing();
 	}
