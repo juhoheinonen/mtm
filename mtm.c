@@ -133,6 +133,8 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 		}
 	}
 
+	player_refresh_coordinates(player, previous_x, previous_y);
+
 	// set player's new position to grid
 	game_grid[player->x][player->y].type = PLAYER_HEAD;
 
