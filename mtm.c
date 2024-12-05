@@ -4,32 +4,73 @@
 // Initialize the game grid with empty tiles and walls. Player and goal tiles are not added here.
 void initialize_game_grid(game_tile game_grid[][48], int width, int height)
 {
-    for (int x = 0; x < width; x++)
-    {
-        for (int y = 0; y < height; y++)
-        {
-            game_grid[x][y].x = x;
-            game_grid[x][y].y = y;
-            if (y < 2) {
-                game_grid[x][y].type = EMPTY;
-            } else {
-                game_grid[x][y].type = GRASS;
-            }
-        }
-    }
+	for (int x = 0; x < width; x++)
+	{
+		for (int y = 0; y < height; y++)
+		{
+			game_grid[x][y].x = x;
+			game_grid[x][y].y = y;
+			if (y < 2)
+			{
+				game_grid[x][y].type = EMPTY;
+			}
+			else
+			{
+				game_grid[x][y].type = GRASS;
+			}
+		}
+	}
 
-    // Add walls
-    for (int x = 0; x < width; x++)
-    {
-        game_grid[x][2].type = WALL; // Uppermost wall just below the EMPTY tiles
-        game_grid[x][height - 1].type = WALL;
-    }
+	// Add walls
+	for (int x = 0; x < width; x++)
+	{
+		game_grid[x][2].type = WALL; // Uppermost wall just below the EMPTY tiles
+		game_grid[x][height - 1].type = WALL;
+	}
 
-    for (int y = 2; y < height; y++)
-    {
-        game_grid[0][y].type = WALL;
-        game_grid[width - 1][y].type = WALL;
-    }
+	for (int y = 2; y < height; y++)
+	{
+		game_grid[0][y].type = WALL;
+		game_grid[width - 1][y].type = WALL;
+	}
+}
+
+void update_grid(game_tile game_grid[][48], player_head *player)
+{
+	// Move the player
+	switch (player->direction)
+	{
+	case UP:
+		player->y--;
+		break;
+	case DOWN:
+		player->y++;
+		break;
+	case LEFT:
+		player->x--;
+		break;
+	case RIGHT:
+		player->x++;
+		break;
+	}
+
+	// using tracelog write player attributes
+	TraceLog(LOG_INFO, "Player head x: %d, y: %d", player->x, player->y);
+	// also direction
+	TraceLog(LOG_INFO, "Player direction: %d", player->direction);
+
+
+	// // Check if the player has hit a wall or a goal
+	// if (game_grid[player.x][player.y].type == WALL)
+	// {
+
+	// const char *text = TextFormat("Player head x: %d, y: %d", player->x, player->y);
+	// DrawText(text, 190, 5, 20, LIGHTGRAY);
+
+	// set player's new position to grid
+	game_grid[player->x][player->y].type = PLAYER_HEAD;
+	// set previous position to GRASS
+	game_grid[player->x - 1][player->y].type = GRASS;
 }
 
 int main(void)
@@ -49,6 +90,11 @@ int main(void)
 	game_tile game_grid[game_grid_width_in_tiles][game_grid_height_in_tiles];
 
 	initialize_game_grid(game_grid, game_grid_width_in_tiles, game_grid_height_in_tiles);
+
+	// initialize player
+	// todo: randomize start position etc.
+	player_head player = {5, 5, RIGHT, NULL};
+	game_grid[player.x][player.y].type = PLAYER_HEAD;
 
 	InitWindow(screenWidth, screenHeight, "Miia the Maggot");
 
@@ -95,6 +141,8 @@ int main(void)
 		EndDrawing();
 
 		// wait for 500ms
-		WaitTime(0.5);
+		WaitTime(0.5);		
+
+		update_grid(game_grid, &player);
 	}
 }
