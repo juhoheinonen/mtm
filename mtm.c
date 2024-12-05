@@ -47,6 +47,18 @@ void initialize_game_grid(game_tile game_grid[][48], int width, int height)
 	}
 }
 
+void get_worm_length(player_head *player)
+{
+	int length = 1;
+	player_body *current = player->next;
+	while (current != NULL)
+	{
+		length++;
+		current = current->next;
+	}
+	TraceLog(LOG_INFO, "Worm length: %d", length);
+}
+
 void update_grid(game_tile game_grid[][48], player_head *player)
 {
 	// get current x and y
@@ -86,46 +98,52 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 		}
 		else
 		{
-			if (player->next == NULL) {
+			if (player->next == NULL)
+			{
 				player_body *new_body = (player_body *)malloc(sizeof(player_body));
 				new_body->x = previous_x;
 				new_body->y = previous_y;
 				new_body->next = NULL;
 				player->next = new_body;
-			} 
-			// else {
-			// 	player_body *current = player->next;
-			// 	while (current->next != NULL)
-			// 	{
-			// 		current = current->next;
-			// 	}
+				game_grid[previous_x][previous_y].type = PLAYER_BODY;
+			}
+			else
+			{
+				player_body *current = player->next;
+				while (current->next != NULL)
+				{
+					current = current->next;
+				}
 
-			// 	player_body *new_body = (player_body *)malloc(sizeof(player_body));
-			// 	new_body->x = current->x;
-			// 	new_body->y = current->y;
-			// 	new_body->next = NULL;
-			// 	current->next = new_body;
-			// }
-
-			// // find the last body part
-			// player_body *current = player->next;
-			// while (current->next != NULL)
-			// {
-			// 	current = current->next;
-
-			// 	player_body *new_body = (player_body *)malloc(sizeof(player_body));
-			// 	new_body->x = previous_x;
-			// 	new_body->y = previous_y;
-			// 	new_body->next = NULL;
-			// 	player->next = new_body;
-			// }
+				player_body *new_body = (player_body *)malloc(sizeof(player_body));
+				new_body->x = current->x;
+				new_body->y = current->y;
+				new_body->next = NULL;
+				current->next = new_body;
+				game_grid[previous_x][previous_y].type = PLAYER_BODY;
+			}
 		}
 	}
 
 	// set player's new position to grid
 	game_grid[player->x][player->y].type = PLAYER_HEAD;
 
-	// set previous position to GRASS
+	// // get last body part of player. Set game_grid for last body to GRASS.
+	// if (player->next != NULL)
+	// {
+	// 	player_body *current = player->next;				
+	// 	// while (current->next != NULL)
+	// 	// {
+	// 	// 	current = current->next;
+	// 	// }
+
+	// 	game_grid[current->x][current->y].type = GRASS;
+	// }
+	// else
+	// {
+	// 	game_grid[previous_x][previous_y].type = GRASS;
+	// }	
+
 	game_grid[previous_x][previous_y].type = GRASS;
 }
 
@@ -199,6 +217,8 @@ int main(void)
 
 	while (!WindowShouldClose())
 	{
+		get_worm_length(&player);
+
 		// check game status. If game over or win, break out of the loop
 		if (status == GAME_OVER || status == WIN)
 		{
@@ -264,7 +284,7 @@ int main(void)
 					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BLUE);
 					break;
 				case PLAYER_BODY:
-					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BLUE);
+					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, ORANGE);
 					break;
 				case GOAL:
 					// DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, RED);
