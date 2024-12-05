@@ -9,7 +9,7 @@ int score = 0;
 const int max_score = 1;
 game_status status = RUNNING;
 
-#define WIN_SEQUENCE_FRAMES 11
+#define WIN_SEQUENCE_FRAMES 37
 
 int getRandomInt(int min, int max)
 {
