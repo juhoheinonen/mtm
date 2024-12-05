@@ -6,7 +6,7 @@
 
 // Global variables
 int score = 0;
-const int max_score = 1;
+const int max_score = 10;
 game_status status = RUNNING;
 
 #define WIN_SEQUENCE_FRAMES 37
