@@ -101,7 +101,7 @@ void get_worm_length(player_head *player)
 		length++;
 		current = current->next;
 	}
-	//TraceLog(LOG_INFO, "Worm length: %d", length);
+	// TraceLog(LOG_INFO, "Worm length: %d", length);
 }
 
 void update_grid(game_tile game_grid[][48], player_head *player)
@@ -285,17 +285,17 @@ int main(void)
 		}
 		else if (status == WIN)
 		{
-			while (!IsKeyDown(KEY_ENTER) && !IsKeyDown(KEY_ESCAPE) && !WindowShouldClose())
+			// while (!IsKeyDown(KEY_ENTER) && !IsKeyDown(KEY_ESCAPE) && !WindowShouldClose())
+			// {
+			for (int i = 0; i < WIN_SEQUENCE_FRAMES; i++)
 			{
-				for (int i = 0; i < WIN_SEQUENCE_FRAMES; i++)
-				{
-					BeginDrawing();
-					ClearBackground(RAYWHITE);
-					DrawTexture(winSequence[i], 0, 0, WHITE);
-					EndDrawing();
-					WaitTime(1); // Adjust the delay as needed
-				}
+				BeginDrawing();
+				ClearBackground(RAYWHITE);
+				DrawTexture(winSequence[i], 0, 0, WHITE);
+				EndDrawing();
+				WaitTime(0.3); // Adjust the delay as needed
 			}
+			// }
 			break;
 		}
 
@@ -396,5 +396,4 @@ int main(void)
 	UnloadTexture(maggotHeadLeftTexture);
 	UnloadTexture(maggotHeadUpTexture);
 	UnloadTexture(maggotHeadDownTexture);
-	
 }
