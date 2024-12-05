@@ -191,7 +191,7 @@ void check_goal_and_add_if_missing(game_tile game_grid[][48], int game_grid_widt
 	bool goal_present = false;
 	for (int x = 0; x < game_grid_width_in_tiles; x++)
 	{
-		for (int y = 0; y < game_grid_height_in_tiles; y++)
+		for (int y = 2; y < game_grid_height_in_tiles; y++)
 		{
 			if (game_grid[x][y].type == GOAL)
 			{
