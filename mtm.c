@@ -86,8 +86,18 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 		}
 		else
 		{
-			// Add a new body part to the player
-			// todo:
+			// // find the last body part
+			// player_body *current = player->next;
+			// while (current->next != NULL)
+			// {
+			// 	current = current->next;
+
+			// 	player_body *new_body = (player_body *)malloc(sizeof(player_body));
+			// 	new_body->x = previous_x;
+			// 	new_body->y = previous_y;
+			// 	new_body->next = NULL;
+			// 	player->next = new_body;
+			// }
 		}
 	}
 
@@ -161,7 +171,7 @@ int main(void)
 	// Load the goal texture
 	Texture2D goalTexture = LoadTexture("goal_1.png");
 
-	SetTargetFPS(60);	
+	SetTargetFPS(60);
 
 	double seconds_elapsed = 0.0;
 	const double increment_seconds = 0.1;
