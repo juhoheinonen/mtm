@@ -101,7 +101,7 @@ void get_worm_length(player_head *player)
 		length++;
 		current = current->next;
 	}
-	TraceLog(LOG_INFO, "Worm length: %d", length);
+	//TraceLog(LOG_INFO, "Worm length: %d", length);
 }
 
 void update_grid(game_tile game_grid[][48], player_head *player)
@@ -391,4 +391,10 @@ int main(void)
 	// unload
 	UnloadTexture(grassTexture);
 	UnloadTexture(goalTexture);
+
+	UnloadTexture(maggotHeadRightTexture);
+	UnloadTexture(maggotHeadLeftTexture);
+	UnloadTexture(maggotHeadUpTexture);
+	UnloadTexture(maggotHeadDownTexture);
+	
 }
