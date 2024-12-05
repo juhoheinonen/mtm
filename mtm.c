@@ -104,12 +104,16 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 				new_body->x = previous_x;
 				new_body->y = previous_y;
 				new_body->next = NULL;
-				player->next = new_body;
-				game_grid[previous_x][previous_y].type = PLAYER_BODY;
+				player->next = new_body;				
 			}
 			else
 			{
 				player_body *current = player->next;
+				if (current != NULL)
+				{
+					current->x = previous_x;
+					current->y = previous_y;					
+				}
 				while (current->next != NULL)
 				{
 					current = current->next;
@@ -119,8 +123,7 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 				new_body->x = current->x;
 				new_body->y = current->y;
 				new_body->next = NULL;
-				current->next = new_body;
-				game_grid[previous_x][previous_y].type = PLAYER_BODY;
+				current->next = new_body;				
 			}
 		}
 	}
