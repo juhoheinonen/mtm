@@ -220,9 +220,7 @@ int main(void)
 
 	const int game_grid_width_in_tiles = 64;
 	const int game_grid_height_in_tiles = 48;
-
-	const int game_area_actual_width = 1024;
-
+	
 	const int tile_width = screenWidth / game_grid_width_in_tiles;
 	const int tile_height = screenHeight / game_grid_height_in_tiles;
 
@@ -264,6 +262,14 @@ int main(void)
 		if (status == GAME_OVER)
 		{
 
+			// wait until press any key
+			while (!IsKeyDown(KEY_ENTER) && !IsKeyDown(KEY_ESCAPE) && !WindowShouldClose())
+			{
+				BeginDrawing();
+				ClearBackground(RAYWHITE);
+				DrawText("Try again, you can do it!", 190, 5, 20, LIGHTGRAY);
+				EndDrawing();
+			}
 			break;
 		}
 		else if (status == WIN)
