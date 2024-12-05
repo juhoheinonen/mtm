@@ -122,23 +122,13 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 			}
 			else
 			{
-				player_body *current = player->next;
-				// if (current != NULL)
-				// {
-				// 	current->x = previous_x;
-				// 	current->y = previous_y;
-				// }
+				player_body *current = player->next;				
 				while (current->next != NULL)
 				{
 					current = current->next;
 				}
 
-				player_body_add_body(current->x, current->y, current);
-				// player_body *new_body = (player_body *)malloc(sizeof(player_body));
-				// new_body->x = current->x;
-				// new_body->y = current->y;
-				// new_body->next = NULL;
-				// current->next = new_body;
+				player_body_add_body(current->x, current->y, current);				
 			}
 		}
 	}
