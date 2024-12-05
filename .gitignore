@@ -1,0 +1,31 @@
+# Compiled object files
+*.o
+
+# Compiled dynamic libraries
+*.so
+
+# Compiled static libraries
+*.a
+*.lib
+
+# Executable files
+mtm
+
+# Debug files
+*.dSYM/
+*.exe
+*.out
+*.app
+*.i
+*.ii
+*.ll
+*.s
+*.su
+*.swp
+
+# IDE specific files
+.vscode/
+*.code-workspace
+
+# Backup files
+*~
