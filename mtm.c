@@ -13,19 +13,19 @@ void initialize_game_grid(game_tile game_grid[][48], int width, int height)
 			game_grid[x][y].type = EMPTY;
 		}
 	}
-	
+
 	// Add walls
 	for (int x = 0; x < width; x++)
 	{
 		game_grid[x][0].type = WALL;
 		game_grid[x][height - 1].type = WALL;
 	}
-	
+
 	for (int y = 0; y < height; y++)
 	{
 		game_grid[0][y].type = WALL;
 		game_grid[width - 1][y].type = WALL;
-	}		
+	}
 }
 
 int main(void)
@@ -35,25 +35,29 @@ int main(void)
 
 	const int game_grid_width_in_tiles = 64;
 	const int game_grid_height_in_tiles = 48;
-	
+
 	const int tile_width = screenWidth / game_grid_width_in_tiles;
 	const int tile_height = screenHeight / game_grid_height_in_tiles;
-	
+
+	int player_x = 1;
+	int player_y = 1; 
+
 	// Declare a fixed-size 2D array
-    game_tile game_grid[game_grid_width_in_tiles][game_grid_height_in_tiles];
+	game_tile game_grid[game_grid_width_in_tiles][game_grid_height_in_tiles];
 
 	initialize_game_grid(game_grid, game_grid_width_in_tiles, game_grid_height_in_tiles);
-	
+
 	InitWindow(screenWidth, screenHeight, "Miia the Maggot");
+
+	// Load the grass texture
+	Texture2D grassTexture = LoadTexture("grass_1.png");
 
 	SetTargetFPS(60);
 
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
-		ClearBackground(RAYWHITE);
-
-		//DrawText("Onneksi olkoon, sait tehtyä ensimmäisen ikkunan!", 190, 200, 20, LIGHTGRAY);
+		ClearBackground(RAYWHITE);		
 
 		// Draw the game grid. Currently just use colors to fill the tiles. Empty is light green, wall is brown.
 		for (int x = 0; x < game_grid_width_in_tiles; x++)
@@ -62,25 +66,29 @@ int main(void)
 			{
 				switch (game_grid[x][y].type)
 				{
-					case EMPTY:
-						DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, GREEN);
-						break;
-					case WALL:
-						DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BROWN);
-						break;
-					case PLAYER:
-						DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BLUE);
-						break;
-					case GOAL:
-						DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, RED);
-						break;
+				case EMPTY:
+					DrawTexture(grassTexture, x * tile_width, y * tile_height, WHITE);
+					break;
+				case WALL:
+					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BROWN);
+					break;
+				case PLAYER_HEAD:
+					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BLUE);
+					break;
+				case PLAYER_BODY:
+					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BLUE);
+					break;
+				case GOAL:
+					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, RED);
+					break;
 				}
 			}
 		}
+		char* text = TextFormat("Tile width: %d, Tile height: %d", tile_width, tile_height);
+		DrawText(text, 190, 200, 20, LIGHTGRAY);
 		EndDrawing();
 
 		// wait for 500ms
 		WaitTime(0.5);
-
-	}
+	}	
 }

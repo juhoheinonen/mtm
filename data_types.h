@@ -12,7 +12,8 @@ typedef struct
     {
         EMPTY,
         WALL,
-        PLAYER,
+        PLAYER_HEAD,
+        PLAYER_BODY,
         GOAL
     } type;
 } game_tile;
