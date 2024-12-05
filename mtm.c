@@ -9,7 +9,7 @@ int score = 0;
 const int max_score = 1;
 game_status status = RUNNING;
 
-#define WIN_SEQUENCE_FRAMES 5
+#define WIN_SEQUENCE_FRAMES 11
 
 int getRandomInt(int min, int max)
 {
@@ -285,8 +285,8 @@ int main(void)
 		}
 		else if (status == WIN)
 		{
-			// while (!IsKeyDown(KEY_ENTER) && !IsKeyDown(KEY_ESCAPE) && !WindowShouldClose())
-			// {
+			while (!IsKeyDown(KEY_ENTER) && !IsKeyDown(KEY_ESCAPE) && !WindowShouldClose())
+			{
 				for (int i = 0; i < WIN_SEQUENCE_FRAMES; i++)
 				{
 					BeginDrawing();
@@ -295,7 +295,7 @@ int main(void)
 					EndDrawing();
 					WaitTime(1); // Adjust the delay as needed
 				}
-			// }
+			}
 			break;
 		}
 
