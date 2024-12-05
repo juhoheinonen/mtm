@@ -37,6 +37,10 @@ void initialize_game_grid(game_tile game_grid[][48], int width, int height)
 
 void update_grid(game_tile game_grid[][48], player_head *player)
 {
+	// get current x and y
+	int previous_x = player->x;
+	int previous_y = player->y;
+
 	// Move the player
 	switch (player->direction)
 	{
@@ -54,11 +58,12 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 		break;
 	}
 
-	// using tracelog write player attributes
-	TraceLog(LOG_INFO, "Player head x: %d, y: %d", player->x, player->y);
-	// also direction
-	TraceLog(LOG_INFO, "Player direction: %d", player->direction);
+	//TraceLog(LOG_INFO, "Player direction: %d", player->direction);
 
+	// using tracelog write player attributes
+	// TraceLog(LOG_INFO, "Player head x: %d, y: %d", player->x, player->y);
+	// also direction
+	// TraceLog(LOG_INFO, "Player direction: %d", player->direction);
 
 	// // Check if the player has hit a wall or a goal
 	// if (game_grid[player.x][player.y].type == WALL)
@@ -70,7 +75,7 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 	// set player's new position to grid
 	game_grid[player->x][player->y].type = PLAYER_HEAD;
 	// set previous position to GRASS
-	game_grid[player->x - 1][player->y].type = GRASS;
+	game_grid[previous_x][previous_y].type = GRASS;
 }
 
 int main(void)
@@ -103,8 +108,43 @@ int main(void)
 
 	SetTargetFPS(60);
 
+	double seconds_elapsed = 0.0;
+	const double increment_seconds = 0.1;
+
 	while (!WindowShouldClose())
 	{
+		//TraceLog(LOG_INFO, "Start. Player direction: %d", player.direction);
+
+		// Listen for direction keys and prevent 180-degree turns
+		if (IsKeyDown(KEY_UP) && player.direction != DOWN)
+		{
+			TraceLog(LOG_INFO, "Up. Player direction: %d", player.direction);
+			player.direction = UP;
+		}
+		if (IsKeyDown(KEY_DOWN) && player.direction != UP)
+		{
+			TraceLog(LOG_INFO, "Down. Player direction: %d", player.direction);
+			player.direction = DOWN;
+		}
+		if (IsKeyDown(KEY_LEFT) && player.direction != RIGHT)
+		{
+			TraceLog(LOG_INFO, "Left. Player direction: %d", player.direction);
+			player.direction = LEFT;
+		}
+		if (IsKeyDown(KEY_RIGHT) && player.direction != LEFT)
+		{
+			TraceLog(LOG_INFO, "Right. Player direction: %d", player.direction);
+			player.direction = RIGHT;
+		}
+
+		// Update the game state based on the elapsed time
+		seconds_elapsed += GetFrameTime();
+		if (seconds_elapsed > 0.2)
+		{
+			seconds_elapsed = 0.0;
+			update_grid(game_grid, &player);
+		}
+
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 
@@ -139,10 +179,5 @@ int main(void)
 		const char *text = TextFormat("Tile width: %d, Tile height: %d", tile_width, tile_height);
 		DrawText(text, 190, 5, 20, LIGHTGRAY);
 		EndDrawing();
-
-		// wait for 500ms
-		WaitTime(0.2);		
-
-		update_grid(game_grid, &player);
 	}
 }
