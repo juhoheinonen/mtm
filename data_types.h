@@ -1,7 +1,6 @@
 #include <stddef.h>
 
 #ifndef DATA_TYPES_H
-
 #define DATA_TYPES_H
 
 typedef struct
@@ -19,6 +18,13 @@ typedef struct
     } type;
 } game_tile;
 
+typedef struct player_body
+{
+    int x;
+    int y;
+    struct player_body *next;    
+} player_body;
+
 typedef struct
 {
     int x;
@@ -30,17 +36,8 @@ typedef struct
         LEFT,
         RIGHT
     } direction;
-    // The player's body is a linked list of body parts.
-    struct player_body *next;
+    player_body *next;
 } player_head;
-
-typedef struct
-{
-    int x;
-    int y;
-    // The player's body is a linked list of body parts.
-    struct player_body *next;    
-} player_body;
 
 // enum for game status, like running, game over and win
 typedef enum
