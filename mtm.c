@@ -157,12 +157,27 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 
 	player_refresh_coordinates(player, previous_x, previous_y);
 
-	//player_body tail = player_get_tail(&player);
+	// loop through player body and set grid to player body
+	// for tail, set grid to grass
+	player_body *current = player->next;
+	while (current != NULL)
+	{
+		game_grid[current->x][current->y].type = PLAYER_BODY;
+		if (current->next == NULL)
+		{
+			game_grid[current->x][current->y].type = GRASS;
+		}
+		current = current->next;
+	}	
 
 	// set player's new position to grid
 	game_grid[player->x][player->y].type = PLAYER_HEAD;
 
-	game_grid[previous_x][previous_y].type = GRASS;
+	// if no body parts, set previous position to grass
+	if (player->next == NULL)
+	{
+		game_grid[previous_x][previous_y].type = GRASS;
+	}	
 }
 
 void check_goal_and_add_if_missing(game_tile game_grid[][48], int game_grid_width_in_tiles, int game_grid_height_in_tiles)
