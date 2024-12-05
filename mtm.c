@@ -73,7 +73,6 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 	// set player's new position to grid
 	game_grid[player->x][player->y].type = PLAYER_HEAD;
 
-
 	// check if player has reached the goal
 	if (game_grid[player->x][player->y].type == GOAL)
 	{
@@ -81,7 +80,9 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 		if (score == max_score)
 		{
 			status = WIN;
-		} else {
+		}
+		else
+		{
 			// Add a new body part to the player
 			// todo:
 		}
@@ -167,6 +168,12 @@ int main(void)
 
 	while (!WindowShouldClose())
 	{
+		// check game status. If game over or win, break out of the loop
+		if (status == GAME_OVER || status == WIN)
+		{
+			break;
+		}
+
 		// if goal is not present, add it
 		check_goal_and_add_if_missing(game_grid, game_grid_width_in_tiles, game_grid_height_in_tiles);
 
@@ -238,5 +245,15 @@ int main(void)
 		const char *text = TextFormat("Score %d/%d", score, max_score);
 		DrawText(text, 190, 5, 20, LIGHTGRAY);
 		EndDrawing();
+	}
+
+	// if game over, show game over screen
+	if (status == GAME_OVER)
+	{
+		// todo: show popup game over
+	}
+	else if (status == WIN)
+	{
+		// todo: transform maggot to butterfly
 	}
 }
