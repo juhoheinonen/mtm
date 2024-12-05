@@ -2,11 +2,14 @@
 #include "data_types.h"
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
 
 // Global variables
 int score = 0;
-const int max_score = 10;
+const int max_score = 1;
 game_status status = RUNNING;
+
+#define WIN_SEQUENCE_FRAMES 5
 
 int getRandomInt(int min, int max)
 {
@@ -220,7 +223,7 @@ int main(void)
 
 	const int game_grid_width_in_tiles = 64;
 	const int game_grid_height_in_tiles = 48;
-	
+
 	const int tile_width = screenWidth / game_grid_width_in_tiles;
 	const int tile_height = screenHeight / game_grid_height_in_tiles;
 
@@ -249,6 +252,14 @@ int main(void)
 	Texture2D maggotHeadUpTexture = LoadTexture("maggot_head_up.png");
 	Texture2D maggotHeadDownTexture = LoadTexture("maggot_head_down.png");
 
+	Texture2D winSequence[WIN_SEQUENCE_FRAMES];
+	for (int i = 0; i < WIN_SEQUENCE_FRAMES; i++)
+	{
+		char fileName[32];
+		sprintf(fileName, "win_sequence_%d.png", i);
+		winSequence[i] = LoadTexture(fileName);
+	}
+
 	SetTargetFPS(60);
 
 	double seconds_elapsed = 0.0;
@@ -267,13 +278,24 @@ int main(void)
 			{
 				BeginDrawing();
 				ClearBackground(RAYWHITE);
-				DrawText("Try again, you can do it!", 190, 5, 20, LIGHTGRAY);
+				DrawText("Try again, you can do it!", 190, 80, 30, LIGHTGRAY);
 				EndDrawing();
 			}
 			break;
 		}
 		else if (status == WIN)
 		{
+			// while (!IsKeyDown(KEY_ENTER) && !IsKeyDown(KEY_ESCAPE) && !WindowShouldClose())
+			// {
+				for (int i = 0; i < WIN_SEQUENCE_FRAMES; i++)
+				{
+					BeginDrawing();
+					ClearBackground(RAYWHITE);
+					DrawTexture(winSequence[i], 0, 0, WHITE);
+					EndDrawing();
+					WaitTime(1); // Adjust the delay as needed
+				}
+			// }
 			break;
 		}
 
@@ -349,7 +371,7 @@ int main(void)
 					case RIGHT:
 						DrawTexture(maggotHeadRightTexture, x * tile_width, y * tile_height, WHITE);
 						break;
-					}					
+					}
 					break;
 				case PLAYER_BODY:
 					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, ORANGE);
@@ -368,5 +390,5 @@ int main(void)
 	CloseWindow();
 	// unload
 	UnloadTexture(grassTexture);
-	UnloadTexture(goalTexture);	
+	UnloadTexture(goalTexture);
 }
