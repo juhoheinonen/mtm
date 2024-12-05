@@ -80,6 +80,7 @@ int main(void)
 		EndDrawing();
 
 		// wait for 500ms
-		Wait(500);		
+		WaitTime(0.5);
+
 	}
 }
