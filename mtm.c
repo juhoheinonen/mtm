@@ -83,12 +83,14 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 			status = WIN;
 		} else {
 			// Add a new body part to the player
-			player_body *new_body_part = (player_body *)malloc(sizeof(player_body));
-			new_body_part->x = previous_x;
-			new_body_part->y = previous_y;
-			new_body_part->next = player->next;
-			player->next = new_body_part;
+			// todo:
 		}
+	}
+
+	// if hit wall or body, game over
+	if (game_grid[player->x][player->y].type == WALL || game_grid[player->x][player->y].type == PLAYER_BODY)
+	{
+		status = GAME_OVER;
 	}
 
 	// set previous position to GRASS
