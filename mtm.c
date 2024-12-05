@@ -305,22 +305,22 @@ int main(void)
 		// Listen for direction keys and prevent 180-degree turns
 		if (IsKeyDown(KEY_UP) && player.direction != DOWN)
 		{
-			TraceLog(LOG_INFO, "Up. Player direction: %d", player.direction);
+			//TraceLog(LOG_INFO, "Up. Player direction: %d", player.direction);
 			player.direction = UP;
 		}
 		if (IsKeyDown(KEY_DOWN) && player.direction != UP)
 		{
-			TraceLog(LOG_INFO, "Down. Player direction: %d", player.direction);
+			//TraceLog(LOG_INFO, "Down. Player direction: %d", player.direction);
 			player.direction = DOWN;
 		}
 		if (IsKeyDown(KEY_LEFT) && player.direction != RIGHT)
 		{
-			TraceLog(LOG_INFO, "Left. Player direction: %d", player.direction);
+			//TraceLog(LOG_INFO, "Left. Player direction: %d", player.direction);
 			player.direction = LEFT;
 		}
 		if (IsKeyDown(KEY_RIGHT) && player.direction != LEFT)
 		{
-			TraceLog(LOG_INFO, "Right. Player direction: %d", player.direction);
+			//TraceLog(LOG_INFO, "Right. Player direction: %d", player.direction);
 			player.direction = RIGHT;
 		}
 
