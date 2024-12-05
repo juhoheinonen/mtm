@@ -141,7 +141,7 @@ int main(void)
 		EndDrawing();
 
 		// wait for 500ms
-		WaitTime(0.5);		
+		WaitTime(0.2);		
 
 		update_grid(game_grid, &player);
 	}
