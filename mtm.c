@@ -2,7 +2,6 @@
 #include "data_types.h"
 #include <stdlib.h>
 #include <time.h>
-#include "mtm.h"
 
 // Global variables
 int score = 0;
@@ -63,6 +62,29 @@ void player_body_add_body(int x, int y, player_body *current)
 	new_body->y = y;
 	new_body->next = NULL;
 	current->next = new_body;
+}
+
+void player_refresh_coordinates(player_head *player, int previous_x, int previous_y) {
+	player_body *current = player->next;
+	while (current != NULL)
+	{
+		int temp_x = current->x;
+		int temp_y = current->y;
+		current->x = previous_x;
+		current->y = previous_y;
+		previous_x = temp_x;
+		previous_y = temp_y;
+		current = current->next;
+	}
+}
+
+player_body *player_get_tail(player_head *player) {
+	player_body *current = player->next;
+	while (current->next != NULL)
+	{
+		current = current->next;
+	}
+	return current;
 }
 
 void get_worm_length(player_head *player)
@@ -134,6 +156,8 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 	}
 
 	player_refresh_coordinates(player, previous_x, previous_y);
+
+	//player_body tail = player_get_tail(&player);
 
 	// set player's new position to grid
 	game_grid[player->x][player->y].type = PLAYER_HEAD;
