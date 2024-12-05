@@ -64,7 +64,8 @@ void player_body_add_body(int x, int y, player_body *current)
 	current->next = new_body;
 }
 
-void player_refresh_coordinates(player_head *player, int previous_x, int previous_y) {
+void player_refresh_coordinates(player_head *player, int previous_x, int previous_y)
+{
 	player_body *current = player->next;
 	while (current != NULL)
 	{
@@ -78,7 +79,8 @@ void player_refresh_coordinates(player_head *player, int previous_x, int previou
 	}
 }
 
-player_body *player_get_tail(player_head *player) {
+player_body *player_get_tail(player_head *player)
+{
 	player_body *current = player->next;
 	while (current->next != NULL)
 	{
@@ -144,13 +146,13 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 			}
 			else
 			{
-				player_body *current = player->next;				
+				player_body *current = player->next;
 				while (current->next != NULL)
 				{
 					current = current->next;
 				}
 
-				player_body_add_body(current->x, current->y, current);				
+				player_body_add_body(current->x, current->y, current);
 			}
 		}
 	}
@@ -168,7 +170,7 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 			game_grid[current->x][current->y].type = GRASS;
 		}
 		current = current->next;
-	}	
+	}
 
 	// set player's new position to grid
 	game_grid[player->x][player->y].type = PLAYER_HEAD;
@@ -177,7 +179,7 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 	if (player->next == NULL)
 	{
 		game_grid[previous_x][previous_y].type = GRASS;
-	}	
+	}
 }
 
 void check_goal_and_add_if_missing(game_tile game_grid[][48], int game_grid_width_in_tiles, int game_grid_height_in_tiles)
@@ -243,6 +245,12 @@ int main(void)
 	// Load the goal texture
 	Texture2D goalTexture = LoadTexture("goal_1.png");
 
+	// Load maggot head texture
+	Texture2D maggotHeadRightTexture = LoadTexture("maggot_head_right.png");
+	Texture2D maggotHeadLeftTexture = LoadTexture("maggot_head_left.png");
+	Texture2D maggotHeadUpTexture = LoadTexture("maggot_head_up.png");
+	Texture2D maggotHeadDownTexture = LoadTexture("maggot_head_down.png");
+
 	SetTargetFPS(60);
 
 	double seconds_elapsed = 0.0;
@@ -253,7 +261,12 @@ int main(void)
 		get_worm_length(&player);
 
 		// check game status. If game over or win, break out of the loop
-		if (status == GAME_OVER || status == WIN)
+		if (status == GAME_OVER)
+		{
+
+			break;
+		}
+		else if (status == WIN)
 		{
 			break;
 		}
@@ -285,7 +298,7 @@ int main(void)
 
 		// Update the game state based on the elapsed time
 		seconds_elapsed += GetFrameTime();
-		if (seconds_elapsed > 0.05)
+		if (seconds_elapsed > 0.025)
 		{
 			seconds_elapsed = 0.0;
 			update_grid(game_grid, &player);
@@ -314,13 +327,28 @@ int main(void)
 					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BROWN);
 					break;
 				case PLAYER_HEAD:
-					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, BLUE);
+					// Rotate the player head texture based on the direction
+					float rotation = 0.0f;
+					switch (player.direction)
+					{
+					case UP:
+						DrawTexture(maggotHeadUpTexture, x * tile_width, y * tile_height, WHITE);
+						break;
+					case DOWN:
+						DrawTexture(maggotHeadDownTexture, x * tile_width, y * tile_height, WHITE);
+						break;
+					case LEFT:
+						DrawTexture(maggotHeadLeftTexture, x * tile_width, y * tile_height, WHITE);
+						break;
+					case RIGHT:
+						DrawTexture(maggotHeadRightTexture, x * tile_width, y * tile_height, WHITE);
+						break;
+					}					
 					break;
 				case PLAYER_BODY:
 					DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, ORANGE);
 					break;
 				case GOAL:
-					// DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, RED);
 					DrawTexture(goalTexture, x * tile_width, y * tile_height, WHITE);
 					break;
 				}
@@ -331,13 +359,8 @@ int main(void)
 		EndDrawing();
 	}
 
-	// if game over, show game over screen
-	if (status == GAME_OVER)
-	{
-		// todo: show popup game over
-	}
-	else if (status == WIN)
-	{
-		// todo: transform maggot to butterfly
-	}
+	CloseWindow();
+	// unload
+	UnloadTexture(grassTexture);
+	UnloadTexture(goalTexture);	
 }
