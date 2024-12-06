@@ -8,6 +8,8 @@
 int score = 0;
 const int max_score = 10;
 game_status status = RUNNING;
+const double refresh_time_seconds = 0.07;
+const double increment_seconds = 0.3;
 
 #define WIN_SEQUENCE_FRAMES 37
 
@@ -263,7 +265,7 @@ int main(void)
 	SetTargetFPS(60);
 
 	double seconds_elapsed = 0.0;
-	const double increment_seconds = 0.1;
+	//const double increment_seconds = 0.1;
 
 	while (!WindowShouldClose())
 	{
@@ -326,7 +328,7 @@ int main(void)
 
 		// Update the game state based on the elapsed time
 		seconds_elapsed += GetFrameTime();
-		if (seconds_elapsed > 0.025)
+		if (seconds_elapsed > refresh_time_seconds)
 		{
 			seconds_elapsed = 0.0;
 			update_grid(game_grid, &player);
