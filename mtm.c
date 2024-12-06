@@ -132,7 +132,7 @@ void update_grid(game_tile game_grid[][48], player_head *player)
 	// if hit wall or body, game over
 	if (game_grid[player->x][player->y].type == WALL || game_grid[player->x][player->y].type == PLAYER_BODY)
 	{
-		TraceLog(LOG_INFO, "Game over. Hit wall or body");
+		//TraceLog(LOG_INFO, "Game over. Hit wall or body");
 		status = GAME_OVER;
 	}
 	// check if player has reached the goal
@@ -244,21 +244,21 @@ int main(void)
 	InitWindow(screenWidth, screenHeight, "Miia the Maggot");
 
 	// Load the grass texture
-	Texture2D grassTexture = LoadTexture("grass_1.png");
+	Texture2D grassTexture = LoadTexture("img/grass_1.png");
 	// Load the goal texture
-	Texture2D goalTexture = LoadTexture("goal_1.png");
+	Texture2D goalTexture = LoadTexture("img/goal_1.png");
 
 	// Load maggot head texture
-	Texture2D maggotHeadRightTexture = LoadTexture("maggot_head_right.png");
-	Texture2D maggotHeadLeftTexture = LoadTexture("maggot_head_left.png");
-	Texture2D maggotHeadUpTexture = LoadTexture("maggot_head_up.png");
-	Texture2D maggotHeadDownTexture = LoadTexture("maggot_head_down.png");
+	Texture2D maggotHeadRightTexture = LoadTexture("img/maggot_head_right.png");
+	Texture2D maggotHeadLeftTexture = LoadTexture("img/maggot_head_left.png");
+	Texture2D maggotHeadUpTexture = LoadTexture("img/maggot_head_up.png");
+	Texture2D maggotHeadDownTexture = LoadTexture("img/maggot_head_down.png");
 
 	Texture2D winSequence[WIN_SEQUENCE_FRAMES];
 	for (int i = 0; i < WIN_SEQUENCE_FRAMES; i++)
 	{
 		char fileName[32];
-		sprintf(fileName, "win_sequence_%d.png", i);
+		sprintf(fileName, "img/win_sequence_%d.png", i);
 		winSequence[i] = LoadTexture(fileName);
 	}
 
